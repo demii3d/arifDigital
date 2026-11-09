@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useRef } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { CtaBanner } from '../components/ui/CtaBanner'
@@ -15,8 +16,17 @@ import { useSeo } from '../hooks/useSeo'
 const ease = [0.22, 1, 0.36, 1] as const
 
 function Hero() {
+  const ref = useRef<HTMLElement>(null)
+  // Cursor spotlight via CSS variables: no React re-renders on mouse move.
+  const onMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (e.pointerType === 'touch' || !ref.current) return
+    const r = ref.current.getBoundingClientRect()
+    ref.current.style.setProperty('--mx', `${e.clientX - r.left}px`)
+    ref.current.style.setProperty('--my', `${e.clientY - r.top}px`)
+  }
   return (
-    <section aria-labelledby="hero-title" className="grid-lines relative overflow-hidden border-b border-line">
+    <section ref={ref} onPointerMove={onMove} aria-labelledby="hero-title" className="group grid-lines relative overflow-hidden border-b border-line">
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:hidden bg-[radial-gradient(420px_circle_at_var(--mx,50%)_var(--my,50%),rgb(255_106_61/0.10),transparent_70%)]" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_75%_30%,rgb(255_106_61/0.10),transparent_70%)]" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink" />
       <div className="wrap relative grid items-center gap-16 pb-20 pt-32 sm:pt-40 lg:min-h-[100svh] lg:grid-cols-[1.15fr_1fr] lg:gap-10 lg:pb-24">

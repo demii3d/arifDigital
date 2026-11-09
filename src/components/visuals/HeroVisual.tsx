@@ -1,10 +1,17 @@
-import { motion } from 'framer-motion'
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
+import type { MotionValue } from 'framer-motion'
+import { createContext, useContext, useEffect } from 'react'
+
+const PointerCtx = createContext<{ x: MotionValue<number>; y: MotionValue<number> } | null>(null)
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-function Layer({ index, label, offset, delay, children }: {
-  index: string; label: string; offset: string; delay: number; children: React.ReactNode
+function Layer({ index, label, offset, delay, depth, children }: {
+  index: string; label: string; offset: string; delay: number; depth: number; children: React.ReactNode
 }) {
+  const ptr = useContext(PointerCtx)!
+  const x = useTransform(ptr.x, (v) => v * depth)
+  const y = useTransform(ptr.y, (v) => v * depth * 0.7)
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -12,7 +19,7 @@ function Layer({ index, label, offset, delay, children }: {
       transition={{ duration: 0.9, delay, ease }}
       className={offset}
     >
-      <div className="rounded-lg border border-line-strong bg-surface/90 p-4 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] sm:p-5">
+      <motion.div style={{ x, y }} className="rounded-lg border border-line-strong bg-surface/90 p-4 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] sm:p-5">
         <div className="mb-4 flex items-center justify-between">
           <span className="eyebrow !text-[0.65rem]">{index} · {label}</span>
           <span className="flex gap-1" aria-hidden>
@@ -22,7 +29,7 @@ function Layer({ index, label, offset, delay, children }: {
           </span>
         </div>
         {children}
-      </div>
+      </motion.div>
     </motion.div>
   )
 }
@@ -34,7 +41,26 @@ const Connector = () => (
 )
 
 export function HeroVisual() {
+  const reduce = useReducedMotion()
+  const rawX = useMotionValue(0)
+  const rawY = useMotionValue(0)
+  const x = useSpring(rawX, { stiffness: 90, damping: 18 })
+  const y = useSpring(rawY, { stiffness: 90, damping: 18 })
+
+  // Pointer parallax: mouse/pen only, never for touch or reduced-motion users.
+  useEffect(() => {
+    if (reduce) return
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType === 'touch') return
+      rawX.set((e.clientX / window.innerWidth - 0.5) * 2)
+      rawY.set((e.clientY / window.innerHeight - 0.5) * 2)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [reduce, rawX, rawY])
+
   return (
+    <PointerCtx.Provider value={{ x, y }}>
     <div
       role="img"
       aria-label="Layered diagram of a software product: interface, services and data connected in sequence"
@@ -44,7 +70,7 @@ export function HeroVisual() {
       <div aria-hidden className="absolute -bottom-8 -left-8 size-40 rounded-full border border-accent/30" />
 
       <div className="relative" aria-hidden>
-        <Layer index="01" label="Interface" offset="mr-6 sm:mr-12" delay={0.35}>
+        <Layer index="01" label="Interface" offset="mr-6 sm:mr-12" delay={0.35} depth={22}>
           <div className="grid grid-cols-[1fr_2fr] gap-3">
             <div className="space-y-2">
               <div className="h-2 w-3/4 rounded-full bg-line-strong" />
@@ -63,7 +89,7 @@ export function HeroVisual() {
 
         <Connector />
 
-        <Layer index="02" label="Services & APIs" offset="ml-6 sm:ml-12" delay={0.5}>
+        <Layer index="02" label="Services & APIs" offset="ml-6 sm:ml-12" delay={0.5} depth={-14}>
           <div className="flex items-center justify-between">
             {[0, 1, 2, 3].map((n) => (
               <div key={n} className="flex flex-1 items-center last:flex-none">
@@ -78,7 +104,7 @@ export function HeroVisual() {
 
         <Connector />
 
-        <Layer index="03" label="Data & infrastructure" offset="mr-2 sm:mr-4" delay={0.65}>
+        <Layer index="03" label="Data & infrastructure" offset="mr-2 sm:mr-4" delay={0.65} depth={10}>
           <div className="space-y-2">
             {[88, 64, 76].map((w, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -90,5 +116,6 @@ export function HeroVisual() {
         </Layer>
       </div>
     </div>
+    </PointerCtx.Provider>
   )
 }
