@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { navLinks, site } from '../../data/site'
 import { Button } from '../ui/Button'
 import { Logo } from '../ui/Logo'
@@ -124,8 +124,9 @@ export function Header() {
               </ul>
               <div className="mt-10 space-y-6">
                 <Button to="/contact" className="w-full">Start a Project</Button>
-                <p className="text-sm text-mute">
-                  <Link to="/contact" className="underline-offset-4 hover:underline">{site.contact.email}</Link>
+                <p className="space-y-2 text-sm text-mute">
+                  <a href={site.contact.phoneHref} className="block min-h-8 underline-offset-4 hover:text-bone hover:underline">{site.contact.phone}</a>
+                  <a href={site.contact.emailHref} className="block min-h-8 break-all underline-offset-4 hover:text-bone hover:underline">{site.contact.email}</a>
                 </p>
               </div>
             </nav>

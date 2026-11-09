@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { CheckCircle2, Clock, Mail, MapPin, Phone } from 'lucide-react'
 import { useId, useState } from 'react'
 import type { FormEvent } from 'react'
+import { WhatsAppIcon } from '../components/ui/WhatsApp'
 import { PageHero } from '../components/ui/PageHero'
 import { services } from '../data/services'
 import { site } from '../data/site'
@@ -182,18 +183,34 @@ export default function Contact() {
             <h2 className="eyebrow">Contact details</h2>
             <ul className="mt-6 divide-y divide-line border-y border-line">
               {[
-                { Icon: Mail, label: 'Email', value: site.contact.email },
-                { Icon: Phone, label: 'Phone', value: site.contact.phone },
-                { Icon: MapPin, label: 'Location', value: site.contact.location },
-                { Icon: Clock, label: 'Hours', value: site.contact.hours },
-              ].map(({ Icon, label, value }) => (
+                { Icon: Mail, label: 'Email', value: site.contact.email, href: site.contact.emailHref, wa: false },
+                { Icon: Phone, label: 'Phone', value: site.contact.phone, href: site.contact.phoneHref, wa: true },
+                { Icon: MapPin, label: 'Location', value: site.contact.location, href: undefined, wa: false },
+                { Icon: Clock, label: 'Hours', value: site.contact.hours, href: undefined, wa: false },
+              ].map(({ Icon, label, value, href, wa }) => (
                 <li key={label} className="flex items-start gap-4 py-5">
                   <Icon size={18} aria-hidden className="mt-0.5 shrink-0 text-accent" />
-                  <div><p className="text-xs uppercase tracking-widest text-mute">{label}</p><p className="mt-1">{value}</p></div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs uppercase tracking-widest text-mute">{label}</p>
+                    <p className="mt-1 break-words">
+                      {href ? <a href={href} className="underline-offset-4 transition-colors hover:text-accent hover:underline">{value}</a> : value}
+                    </p>
+                  </div>
+                  {wa && (
+                    <a
+                      href={site.contact.whatsappHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Chat with us on WhatsApp (opens in a new tab)"
+                      className="inline-grid size-11 shrink-0 place-items-center rounded-full border border-line-strong text-bone transition-colors hover:border-[#25D366] hover:bg-[#25D366] hover:text-white"
+                    >
+                      <WhatsAppIcon className="size-5" />
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-xs text-mute">Contact details are placeholders and will be updated before launch.</p>
+            <p className="mt-4 text-xs text-mute">Location and hours are placeholders and will be updated before launch.</p>
 
             <h2 className="eyebrow mt-12">What happens next</h2>
             <ol className="mt-5 space-y-4 text-sm leading-relaxed text-mute">

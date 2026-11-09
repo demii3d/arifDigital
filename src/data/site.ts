@@ -11,18 +11,18 @@ export const site = {
   // PLACEHOLDER: replace with the production domain
   url: 'https://www.example.com',
   contact: {
+    email: 'tech-operations@arifdigitalsolution.com',
+    phone: '+44 7762 544117',
+    // Digits only, for tel: and wa.me links
+    phoneHref: 'tel:+447762544117',
+    emailHref: 'mailto:tech-operations@arifdigitalsolution.com',
+    whatsappHref: `https://wa.me/447762544117?text=${encodeURIComponent(
+      'Hello ARIF Digital Solutions, I would like to make an enquiry about your services.',
+    )}`,
     // PLACEHOLDER values
-    email: 'hello@your-domain.com',
-    phone: '+00 000 000 0000',
     location: 'Location to be confirmed',
     hours: 'Mon – Fri, 09:00 – 17:00',
   },
-  // PLACEHOLDER: point these at real profiles
-  social: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/' },
-    { label: 'GitHub', href: 'https://github.com/' },
-    { label: 'X', href: 'https://x.com/' },
-  ],
 } as const
 
 export const navLinks = [

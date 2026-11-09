@@ -3,6 +3,7 @@ import { Suspense, useEffect } from 'react'
 import { useLocation, useOutlet } from 'react-router-dom'
 import { Footer } from './Footer'
 import { Header } from './Header'
+import { WhatsAppFloat } from '../ui/WhatsApp'
 import { ScrollProgress } from './ScrollProgress'
 
 function ScrollManager() {
@@ -59,6 +60,7 @@ export function Layout() {
         </motion.main>
       </AnimatePresence>
       <Footer />
+      <WhatsAppFloat />
     </>
   )
 }
