@@ -8,8 +8,8 @@ export const site = {
   tagline: 'Software & digital product development',
   description:
     'ARIF Digital Solutions designs, builds and delivers software, web applications and digital products with a collaborative network of independent specialists.',
-  // PLACEHOLDER: replace with the production domain
-  url: 'https://www.example.com',
+  // Production domain (no trailing slash). Also update the absolute URLs in index.html if it changes.
+  url: 'https://arifdigitalsolution.com',
   contact: {
     email: 'tech-operations@arifdigitalsolution.com',
     phone: '+44 7762 544117',
