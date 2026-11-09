@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+
+  --color-ink: #0b0c0c;
+  --color-surface: #121413;
+  --color-raised: #181b1a;
+  --color-line: #262a28;
+  --color-line-strong: #3a3f3c;
+  --color-bone: #ece9e2;
+  --color-paper: #e9e5dc;
+  --color-mute: #9a9f9a;
+  --color-accent: #ff6a3d;
+  --color-accent-deep: #c7401b;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (min-width: 640px) { padding-inline: 2rem; }
+  @media (min-width: 1024px) { padding-inline: 3rem; }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    background: var(--color-ink);
+  }
+  body {
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  ::selection { background: var(--color-accent); color: var(--color-ink); }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  img, svg { max-width: 100%; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+}
+
+@layer components {
+  .display {
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+  }
+  .serif-i { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-mute);
+  }
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+}
+
+/* Flowing dashes on architecture lines */
+@keyframes flow { to { stroke-dashoffset: -24; } }
+.flow-line { stroke-dasharray: 3 9; animation: flow 1.8s linear infinite; }
+@keyframes pulse-ring { 0% { opacity: .55; transform: scale(1); } 100% { opacity: 0; transform: scale(2.4); } }
+.pulse-ring { transform-origin: center; transform-box: fill-box; animation: pulse-ring 2.6s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .flow-line, .pulse-ring { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
+@keyframes flow-v { to { background-position: 0 12px; } }
+.flow-v {
+  width: 1px;
+  background-image: repeating-linear-gradient(to bottom, var(--color-accent) 0 3px, transparent 3px 9px);
+  background-size: 1px 12px;
+  animation: flow-v 1.2s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) { .flow-v { animation: none; } }
